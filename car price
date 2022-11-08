@@ -26,7 +26,7 @@ print(car_dataset.nunique())
 #Filling the missing values in each column
 car_dataset['Engine'].fillna(car_dataset['Engine'].mode(0),inplace=True)
 car_dataset['Mileage'].fillna(car_dataset['Mileage'].mode(0),inplace=True)
-car_dataset['Power'].fillna(car_dataset['Power'].mode(0),inplace=True)
+car_dataset['Power'].fillna(car_dataset['Power'].mode()[0],inplace=True)
 car_dataset['Seats'].fillna(car_dataset['Seats'].mean(),inplace=True)
 car_dataset.isnull().sum()
 #Removing the duplicate data
