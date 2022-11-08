@@ -1,0 +1,69 @@
+#Adding important modules to our project
+import numpy as ns
+import pandas as pd
+import matplotlib.pyplot as mtp
+import seaborn as sms
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression # LinearRegssion are used for numeric prediction  like price of the car , Calssifiation model is used for caterogial prediction like yes or no
+from sklearn.linear_model import Lasso # it is also for prediction on numeric values
+from sklearn import  metrics # used to evaluate our model to find the errors code and accuracy
+#Importing the data and analysing the data
+pd.set_option('display.max_columns',None)
+car_dataset=pd.read_csv('car price dataset.csv')
+print(car_dataset)
+print("\nThe Length of the Data : ", len(car_dataset)) # return the total no.of data
+print("\nThe shpae of the Data : ",car_dataset.shape) # return the no.of rows and columns 
+print("\nThe Information of the Data : ") # getting information about the data
+print(car_dataset.info())
+#Checking the Missing values for Data Preprocessing
+car_dataset.isnull().sum() # If null values exit separate the null values form the dataset
+#Showing the statistical caluculations.
+print("\nThe Statistical Calculations : ")
+print(car_dataset.describe().T)
+#Showing the unique data
+print("\nThe Unique Data :")
+print(car_dataset.nunique())
+#Filling the missing values in each column
+car_dataset['Engine'].fillna(car_dataset['Engine'].mode(0),inplace=True)
+car_dataset['Mileage'].fillna(car_dataset['Mileage'].mode(0),inplace=True)
+car_dataset['Power'].fillna(car_dataset['Power'].mode(0),inplace=True)
+car_dataset['Seats'].fillna(car_dataset['Seats'].mean(),inplace=True)
+car_dataset.isnull().sum()
+#Removing the duplicate data
+car_dataset.drop_duplicates(inplace=True)
+print("\nThe Shpae of the Data After Removing the duplicates form Data :",car_dataset.shape)
+#converting the Ordinal data into numerical data for calculation
+print(car_dataset.Fuel_Type.value_counts())
+print(car_dataset.Transmission.value_counts())
+print(car_dataset.Owner_Type.value_counts())
+car_dataset.replace({'Fuel_Type':{'Petrol':0,'Diesel':1,'CNG':2,'LPG':3,'Electric':4}},inplace=True)
+car_dataset.replace({'Transmission':{'Manual':0,'Automatic':1}},inplace=True)
+car_dataset.replace({'Owner_Type':{'First':0,'Second':1,'Third':2,'Fourth & Above':3}},inplace=True)
+#Spilitting data and traget
+import numpy as np
+X=np.array(car_dataset.drop(['Name','Location','Power','Mileage','Price','Engine'],axis=1))
+Y=np.array(car_dataset['Price'])
+print("Value of X: ",X)
+print("Value of Y : ",Y)
+#Splitting Training and test data
+x_train,x_test,y_train,y_test=train_test_split(X,Y,test_size=0.1,random_state=1)
+#Applying Linear Regression algorithm on data
+reg=LinearRegression()
+reg.fit(x_train,y_train)
+training_data_prediction=reg.predict(x_train)
+error_score=metrics.r2_score(y_train,training_data_prediction)
+print("R square Error : ",error_score)
+#Visualize the Actual price and predicted price
+mtp.scatter(y_train,training_data_prediction)
+mtp.xlabel("Acutal Price ")
+mtp.ylabel("Predicted Price")
+mtp.title("Actual Prices Vs Predicted Prices")
+mtp.show()
+test_data_prediction=reg.predict(x_test)
+error_sscpre=metrics.r2_score(y_test,test_data_prediction)
+print("R squared Error : ",error_score)
+mtp.scatter(y_test,test_data_prediction)
+mtp.xlabel("Acutal Price ")
+mtp.ylabel("Predicted Price")
+mtp.title("Actual Prices Vs Predicted Prices")
+mtp.show()
